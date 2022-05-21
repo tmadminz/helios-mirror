@@ -71,8 +71,6 @@ class DbManger:
                     with open(path, 'wb+') as f:
                         f.write(row[5])
                         f.close()
-                if row[6] and row[0] not in MOD_USERS:
-                    MOD_USERS.add(row[0])
                 if row[7] and row[0] not in LEECH_LOG:
                     LEECH_LOG.add(row[0])
                 if row[8] and row[0] not in LEECH_LOG_ALT:
