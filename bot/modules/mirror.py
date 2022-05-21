@@ -54,6 +54,7 @@ class MirrorListener:
         self.tag = tag
         self.user_id = self.message.from_user.id
         self.__chat_id = self.message.chat.id
+        self.isPrivate = self.message.chat.type in ['private', 'group']
 
     def clean(self):
         try:
