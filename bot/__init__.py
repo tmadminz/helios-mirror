@@ -554,9 +554,9 @@ except KeyError:
 try:
     GD_INFO = getConfig('GD_INFO')
     if len(GD_INFO) == 0:
-        GD_INFO = 'Uploaded by Helios Mirror Bot'
+        GD_INFO = 'Uploaded by TM Adminz'
 except KeyError:
-    GD_INFO = 'Uploaded by Helios Mirror Bot'
+    GD_INFO = 'Uploaded by TM Adminz'
 
 try:
     TITLE_NAME = getConfig('TITLE_NAME')
@@ -568,16 +568,16 @@ except KeyError:
 try:
     AUTHOR_NAME = getConfig('AUTHOR_NAME')
     if len(AUTHOR_NAME) == 0:
-        AUTHOR_NAME = 'Helios-Mirror-Bot'
+        AUTHOR_NAME = 'TM-Mirror-Bot'
 except KeyError:
-    AUTHOR_NAME = 'Helios-Mirror-Bot'
+    AUTHOR_NAME = 'TM-Mirror-Bot'
 
 try:
     AUTHOR_URL = getConfig('AUTHOR_URL')
     if len(AUTHOR_URL) == 0:
-        AUTHOR_URL = 'https://t.me/heliosmirror'
+        AUTHOR_URL = 'https://t.me/TM_Moviez'
 except KeyError:
-    AUTHOR_URL = 'https://t.me/heliosmirror'
+    AUTHOR_URL = 'https://t.me/TM_Moviez'
 
 try:
     BOT_PM = getConfig('BOT_PM')
