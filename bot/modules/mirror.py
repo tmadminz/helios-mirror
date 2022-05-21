@@ -15,7 +15,7 @@ from bot import bot, Interval, OWNER_ID, INDEX_URL, BUTTON_FOUR_NAME, BUTTON_FOU
                  BLOCK_MEGA_FOLDER, BLOCK_MEGA_LINKS, VIEW_LINK, aria2, QB_SEED, \
                 dispatcher, DOWNLOAD_DIR, download_dict, download_dict_lock, TG_SPLIT_SIZE, LOGGER, \
                 MIRROR_LOGS, BOT_PM, CHANNEL_USERNAME, LEECH_ENABLED, AUTO_DELETE_UPLOAD_MESSAGE_DURATION, FSUB, \
-                FSUB_CHANNEL_ID, LEECH_LOG, SOURCE_LINK, LEECH_LOG_ALT, MEGAREST, LINK_LOGS
+                FSUB_CHANNEL_ID, LEECH_LOG, SOURCE_LINK, LEECH_LOG_ALT, MEGAREST, LINK_LOGS, INCOMPLETE_TASK_NOTIFIER, DB_URI
 from bot.helper.ext_utils.bot_utils import is_url, is_magnet, is_gdtot_link, is_mega_link, is_gdrive_link, get_content_type, get_mega_link_type
 from bot.helper.ext_utils.fs_utils import get_base_name, get_path_size, split as fssplit, clean_download
 from bot.helper.ext_utils.shortenurl import short_url
@@ -68,7 +68,10 @@ class MirrorListener:
 
     def onDownloadProgress(self):
         # We are handling this on our own!
-        pass
+        #pass
+        if not self.isPrivate and INCOMPLETE_TASK_NOTIFIER and DB_URI is not None:
+            DbManger().add_incomplete_task(self.message.chat.id, self.message.link, self.tag)        
+      
     def onDownloadComplete(self):
         with download_dict_lock:
             LOGGER.info(f"Download completed: {download_dict[self.uid].name()}")
@@ -210,8 +213,13 @@ class MirrorListener:
         else:
             update_all_messages()
         Thread(target=auto_delete_message, args=(bot, self.message, msg)).start()
+        
+        if not self.isPrivate and INCOMPLETE_TASK_NOTIFIER and DB_URI is not None:
+            DbManger().rm_complete_task(self.message.link)        
 
     def onUploadComplete(self, link: str, size, files, folders, typ, name: str):
+        if not self.isPrivate and INCOMPLETE_TASK_NOTIFIER and DB_URI is not None:
+            DbManger().rm_complete_task(self.message.link)
         uname = f'<a href="tg://user?id={self.message.from_user.id}">{self.message.from_user.first_name}</a>'
         chat_id = str(LEECH_LOG)[5:][:-1]
         buttons = ButtonMaker()
