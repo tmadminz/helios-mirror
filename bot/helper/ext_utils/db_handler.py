@@ -71,10 +71,6 @@ class DbManger:
                     with open(path, 'wb+') as f:
                         f.write(row[5])
                         f.close()
-                if row[7] and row[0] not in LEECH_LOG:
-                    LEECH_LOG.add(row[0])
-                if row[8] and row[0] not in LEECH_LOG_ALT:
-                    LEECH_LOG_ALT.add(row[0])
             LOGGER.info("Users data has been imported from Database")
         # Rss Data
         self.cur.execute("SELECT * FROM rss")
