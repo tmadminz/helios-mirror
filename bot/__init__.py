@@ -705,3 +705,4 @@ updater = tgUpdater(token=BOT_TOKEN)
 bot = updater.bot
 dispatcher = updater.dispatcher
 job_queue = updater.job_queue
+botname = bot.username
