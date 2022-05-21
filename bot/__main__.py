@@ -13,7 +13,7 @@ from telegram.ext import CommandHandler
 
 from wserver import start_server_async
 from bot import bot, app, dispatcher, updater, botStartTime, IGNORE_PENDING_REQUESTS, IS_VPS, PORT, alive, web, \
-                    OWNER_ID, AUTHORIZED_CHATS, LOGGER, Interval, nox, rss_session, LEECH_ENABLED, CHANNEL_USERNAME, BOT_PM, a2c
+                    OWNER_ID, AUTHORIZED_CHATS, LOGGER, Interval, nox, rss_session, LEECH_ENABLED, CHANNEL_USERNAME, BOT_PM, a2c, INCOMPLETE_TASK_NOTIFIER, DB_URI
 from .helper.ext_utils.fs_utils import start_cleanup, clean_all, exit_clean_up
 from .helper.telegram_helper.bot_commands import BotCommands
 from .helper.telegram_helper.message_utils import sendMessage, sendMarkup, editMessage, sendLogFile, auto_delete_message
@@ -277,9 +277,40 @@ botcmds = [
 def main():
     # bot.set_my_commands(botcmds)
     start_cleanup()
+    if INCOMPLETE_TASK_NOTIFIER and DB_URI is not None:
+        notifier_dict = DbManger().get_incomplete_tasks()
+        if notifier_dict:
+            for cid, data in notifier_dict.items():
+                if ospath.isfile(".restartmsg"):
+                    with open(".restartmsg") as f:
+                        chat_id, msg_id = map(int, f)
+                    msg = 'Restarted successfully!'
+                else:
+                    msg = 'Bot Restarted!'
+                for tag, links in data.items():
+                     msg += f"\n\n{tag}: "
+                     for index, link in enumerate(links, start=1):
+                         msg += f" <a href='{link}'>{index}</a> |"
+                         if len(msg.encode()) > 4000:
+                             if 'Restarted successfully!' in msg and cid == chat_id:
+                                 bot.editMessageText(msg, chat_id, msg_id, parse_mode='HTMl')
+                                 osremove(".restartmsg")
+                             else:
+                                 bot.sendMessage(cid, msg, 'HTML')
+                             msg = ''
+                if 'Restarted successfully!' in msg and cid == chat_id:
+                     bot.editMessageText(msg, chat_id, msg_id, parse_mode='HTMl')
+                     osremove(".restartmsg")
+                else:
+                    bot.sendMessage(cid, msg, 'HTML')
+
     if IS_VPS:
         asyrun(start_server_async(PORT))
     # Check if the bot is restarting
+    
+    
+    
+    
     if ospath.isfile(".restartmsg"):
         with open(".restartmsg") as f:
             chat_id, msg_id = map(int, f)
