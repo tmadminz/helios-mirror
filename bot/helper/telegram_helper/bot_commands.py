@@ -57,6 +57,7 @@ class _BotCommands:
         self.RssSubCommand = getCommand('RSSSUB_COMMAND', 'rsssub')
         self.RssUnSubCommand = getCommand('RSSUNSUB_COMMAND', 'rssunsub')
         self.RssUnSubAllCommand = getCommand('RSSUNSUBALL_COMMAND', 'rssunsuball')
+        self.RssSettingsCommand = getCommand('RSSSET_COMMAND', 'rssset')
         self.AddleechlogCommand = getCommand('ADDLEECHLOG_COMMAND', 'addll')
         self.RmleechlogCommand = getCommand('RMLEECHLOG_COMMAND', 'rmll')
         self.AddleechlogaltCommand = getCommand('ADDLEECHLOGALT_COMMAND', 'addleechlog')
